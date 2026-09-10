@@ -17,21 +17,22 @@ export async function analyzeJobWithGemini(rawContent: string, geminiKey: string
   const url = `https://generativelanguage.googleapis.com/v1beta/models/${MODEL}:generateContent?key=${geminiKey}`;
 
   const prompt = `
-Bạn là chuyên gia thẩm định và săn lùng job Freelance (Video Editor, Designer) từ MẠNG XÃ HỘI VÀ KHU VỰC BÌNH LUẬN (Threads, TikTok, YouTube, Facebook).
-Hãy phân tích dữ liệu cào được dưới đây:
+Bạn là chuyên gia thẩm định và săn lùng job Freelance (Video Editor, Designer) từ mạng xã hội, diễn đàn và bình luận.
+Hãy phân tích nội dung cào được dưới đây:
 
-=== NỘI DUNG RAW (BAO GỒM CẢ BÌNH LUẬN) ===
+=== NỘI DUNG RAW ===
 ${rawContent}
-==========================================
+====================
 
-HƯỚNG DẪN XỬ LÝ KHU VỰC BÌNH LUẬN (COMMENTS):
-1. NHẬN DIỆN KHÁCH HÀNG:
-   - Nếu trong bình luận có ai đó hỏi thuê (VD: "Ai nhận dựng video kiểu này không?", "Bác nào làm thumbnail giống video này ib mình nhé", "Cần tìm người edit video tương tự LH 09xx..."): ĐÂY LÀ JOB THẬT -> "isValidJob = true".
-   - Nếu bình luận là freelancer tự ứng tuyển ("Em nhận edit giá rẻ...", "Ib em nhận làm...") -> BỎ QUA ("isValidJob = false").
-2. THỜI GIAN (7 NGÀY): Đăng trong vòng 7 ngày trở lại -> "isWithin7Days = true".
-3. THÔNG TIN LIÊN HỆ: Lấy đúng username / SĐT / Zalo của NGƯỜI CẦN THUÊ trong bài viết hoặc trong bình luận đó.
-4. PHÂN LOẠI KỸ NĂNG: [TikTok / Reels], [CapCut], [YouTube Editor], [Premiere / AE], [Thumbnail / Banner], [2D / 3D Design].
-5. CHẤM ĐIỂM (1 - 5 ⭐): Đánh giá độ chi tiết và tiềm năng chốt deal.
+TIÊU CHÍ BẮT BUỘC ĐẶC BIỆT:
+1. NHẬN DIỆN CẢ NHU CẦU TRỰC TIẾP LẪN NHU CẦU NGẦM (VĂN NÓI TỰ NHIÊN):
+   - Chấp nhận cả những bài đăng hỏi han nhờ làm theo mẫu (VD: "Hổng biết có ai edit được kiểu này ko", "Ai làm được video như này ib mình", "Có bác nào nhận làm dạng này ko ạ..."). ĐÂY VẪN LÀ KHÁCH HÀNG TIỀM NĂNG -> Đánh dấu "isValidJob = true".
+   - CHỈ BỎ QUA ("isValidJob = false") nếu là Freelancer tự đăng bài quảng cáo chào dịch vụ của mình (VD: "Mình nhận edit giá rẻ...", "Ai cần làm clip ib em...").
+2. LỌC THỜI GIAN (7 NGÀY): Đăng trong vòng 7 ngày trở lại -> "isWithin7Days = true".
+3. PHÂN LOẠI KỸ NĂNG: [Edit Theo Mẫu / TikTok Trend], [CapCut / Reels], [Premiere / After Effects], [YouTube Editor], [Thumbnail / Banner], [2D / 3D Animation].
+4. ĐÁNH GIÁ TIỀM NĂNG:
+   - Nếu là bài hỏi làm theo mẫu/trend: Ghi chú "4/5 ⭐ (Cần chủ động inbox gửi sản phẩm mẫu tương tự để chốt deal)".
+5. LIÊN HỆ & YÊU CẦU: Tóm tắt chính xác phong cách/video mà khách đang muốn làm theo.
 `;
 
   for (let attempt = 1; attempt <= retries; attempt++) {
