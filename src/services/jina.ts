@@ -5,10 +5,12 @@ export interface RawScrapedPost {
 }
 
 export function parsePlatform(url: string): string {
+  if (url.includes('tiktok.com')) return 'TikTok';
+  if (url.includes('youtube.com') || url.includes('youtu.be')) return 'YouTube';
   if (url.includes('threads.net')) return 'Threads';
   if (url.includes('facebook.com')) return 'Facebook';
   if (url.includes('x.com') || url.includes('twitter.com')) return 'X';
-  return 'Khác';
+  return 'Web / Khác';
 }
 
 export async function searchWithJina(query: string, apiKey: string): Promise<RawScrapedPost[]> {
@@ -37,7 +39,7 @@ export async function searchWithJina(query: string, apiKey: string): Promise<Raw
       if (urlMatch) {
         const postUrl = urlMatch[1].trim();
 
-        // Bỏ qua trang profile cá nhân hoặc trang search rác
+        // Bỏ qua trang profile cá nhân rác không có video/post
         if (postUrl.includes('/search') || postUrl.endsWith('.net/')) continue;
 
         posts.push({
@@ -48,7 +50,7 @@ export async function searchWithJina(query: string, apiKey: string): Promise<Raw
       }
     }
   } catch (err) {
-    console.error(`Lỗi tìm kiếm Jina query: "${query}"`, err);
+    console.error(`Lỗi tìm kiếm Jina: ${query}`, err);
   }
 
   return posts;
