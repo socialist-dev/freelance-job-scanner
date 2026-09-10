@@ -88,9 +88,13 @@ export async function generateAIDorks(geminiKey: string): Promise<string[]> {
   const url = `https://generativelanguage.googleapis.com/v1beta/models/${MODEL}:generateContent?key=${geminiKey}`;
 
   const prompt = `
-Hãy tạo 3 câu Google Dorking tiếng Việt nâng cao và độc đáo nhất để săn lùng các bài đăng TUYỂN DỤNG FREELANCE VIDEO EDITOR & DESIGNER trên toàn mạng xã hội/diễn đàn/bình luận.
+Hãy tạo 3 câu Google Dorking tiếng Việt cực kỳ linh hoạt, sử dụng VĂN NÓI TỰ NHIÊN, TEEN-CODE hoặc CÂU HỎI NHỜ VẢ để săn các khách hàng đang muốn tìm người edit video/design trên Threads, Facebook, TikTok.
+Ví dụ phong cách:
+- ("hổng biết ai" OR "có ai nhận") ("edit kiểu này" OR "làm clip dạng này")
+- ("ai biết làm video" OR "ai dựng được") ("giống vầy" OR "như này hông")
+
 Trả về danh sách dạng mảng JSON gồm 3 chuỗi query.
-Ví dụ format: ["query 1", "query 2", "query 3"]
+Format: ["query 1", "query 2", "query 3"]
 `;
 
   try {
