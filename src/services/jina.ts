@@ -1,8 +1,19 @@
-import { JobItem, parsePlatform, cleanRawContent, extractTimeAgoAndValidate, extractBudget, extractContact } from '../utils/parser';
+export interface RawScrapedPost {
+  platform: string;
+  url: string;
+  rawContent: string;
+}
 
-export async function searchWithJina(query: string, apiKey: string): Promise<JobItem[]> {
+export function parsePlatform(url: string): string {
+  if (url.includes('threads.net')) return 'Threads';
+  if (url.includes('facebook.com')) return 'Facebook';
+  if (url.includes('x.com') || url.includes('twitter.com')) return 'X';
+  return 'Khác';
+}
+
+export async function searchWithJina(query: string, apiKey: string): Promise<RawScrapedPost[]> {
   const url = `https://s.jina.ai/${encodeURIComponent(query)}`;
-  const jobs: JobItem[] = [];
+  const posts: RawScrapedPost[] = [];
 
   try {
     const res = await fetch(url, {
@@ -22,40 +33,23 @@ export async function searchWithJina(query: string, apiKey: string): Promise<Job
       if (!section.trim()) continue;
 
       const urlMatch = section.match(/URL Source:\s*(https?:\/\/[^\s\n]+)/);
-      const titleMatch = section.match(/(.+?)\n/);
 
       if (urlMatch) {
         const postUrl = urlMatch[1].trim();
 
-        // Bỏ qua nếu là link profile hoặc trang tìm kiếm
-        if (postUrl.includes('/search') || postUrl.endsWith('.net/') || !postUrl.includes('/post/') && !postUrl.includes('/groups/') && !postUrl.includes('/status/')) {
-          continue;
-        }
+        // Bỏ qua trang profile cá nhân hoặc trang search rác
+        if (postUrl.includes('/search') || postUrl.endsWith('.net/')) continue;
 
-        // Lọc bài đăng trong 24h
-        const { isWithin24h, postedAgo } = extractTimeAgoAndValidate(section);
-        if (!isWithin24h) continue;
-
-        const cleanText = cleanRawContent(section);
-
-        // Bỏ qua bài viết quá ngắn hoặc không chứa yêu cầu thực tế
-        if (cleanText.length < 30) continue;
-
-        jobs.push({
-          scanTime: new Date().toLocaleString('vi-VN', { timeZone: 'Asia/Ho_Chi_Minh' }),
+        posts.push({
           platform: parsePlatform(postUrl),
-          postedAgo: postedAgo,
-          title: titleMatch ? titleMatch[1].trim() : 'Tìm Freelancer',
-          requirements: cleanText.slice(0, 500) + '...', // Lấy đúng nội dung yêu cầu
-          budget: extractBudget(cleanText),
-          contact: extractContact(cleanText),
-          url: postUrl
+          url: postUrl,
+          rawContent: section
         });
       }
     }
   } catch (err) {
-    console.error(`Lỗi Jina search: ${query}`, err);
+    console.error(`Lỗi tìm kiếm Jina query: "${query}"`, err);
   }
 
-  return jobs;
+  return posts;
 }
