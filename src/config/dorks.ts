@@ -1,17 +1,18 @@
 export const BASE_DORK_QUERIES = [
-  // 1. Bình luận & Bài đăng trên TikTok
-  'site:tiktok.com/@* ("cần tìm editor" OR "tuyển edit video" OR "ai nhận edit" OR "tìm người dựng video")',
-  'site:tiktok.com ("tìm designer" OR "ai làm thumbnail" OR "cần người edit capcut")',
+  // 1. Dạng hỏi người làm theo Mẫu / Style / Trend (Như trong ảnh của bạn)
+  '("ai edit được" OR "ai làm được" OR "ai dựng được" OR "ai design được") ("kiểu này" OR "dạng này" OR "như này" OR "giống vầy" OR "style này")',
+  
+  // 2. Dạng văn nói hỏi han, nhờ vả tự nhiên
+  '("hổng biết có ai" OR "không biết có ai" OR "có bác nào" OR "có ai nhận") ("edit" OR "dựng clip" OR "làm video" OR "design") ("không ạ" OR "ko ạ" OR "hông" OR "giùm" OR "hộ")',
 
-  // 2. Bình luận & Bài đăng trên YouTube (Mỏ vàng Creator tìm Editor)
-  'site:youtube.com ("tìm editor" OR "tuyển edit video" OR "cần người edit video" OR "hiring editor") (intext:"liên hệ" OR intext:"zalo" OR intext:"email")',
-  'site:youtube.com/post ("tuyển editor" OR "cần tìm bạn edit" OR "tìm designer làm thumbnail")',
+  // 3. Dạng hỏi tìm người làm có trả phí / báo giá
+  '("ai nhận làm" OR "ai nhận edit" OR "ai nhận dựng") ("video này" OR "clip này" OR "ảnh này") (intext:"inbox" OR intext:"báo giá" OR intext:"có phí" OR intext:"ib")',
 
-  // 3. Săn lùng câu hỏi / trao đổi tuyển dụng trong Bình luận Threads & Facebook
-  'site:threads.net ("bác nào nhận edit" OR "ai nhận làm video" OR "có ai nhận design" OR "cần thuê người dựng")',
-  'site:threads.net ("inbox giá" OR "báo giá giúp mình" OR "ai rảnh nhận job")',
-  'site:facebook.com/groups ("ai nhận edit" OR "cần người làm video gấp" OR "bác nào design được") (intext:"comment" OR intext:"inbox" OR intext:"zalo")',
+  // 4. Quét riêng Threads & Facebook Group với từ khóa tự nhiên
+  'site:threads.net ("ai nhận edit" OR "ai làm được video" OR "ai edit giùm" OR "cần người làm clip")',
+  'site:facebook.com/groups ("hổng biết có ai" OR "ai nhận làm" OR "ai edit được") ("kiểu này" OR "như này" OR "dạng này")',
 
-  // 4. Quét tự do toàn mạng (Kể cả diễn đàn Voz, Spiderum, blog)
-  '("cần tìm người edit" OR "tìm freelance design") (intext:"bình luận bên dưới" OR intext:"để lại liên hệ" OR intext:"inbox mình")'
+  // 5. Quét YouTube & TikTok (Săn người hỏi làm hiệu ứng/trend)
+  'site:tiktok.com ("ai edit được" OR "ai biết làm video kiểu này" OR "xin in4 người edit")',
+  'site:youtube.com ("ai nhận edit video" OR "thuê người edit clip này" OR "hỏi người dựng")'
 ];
