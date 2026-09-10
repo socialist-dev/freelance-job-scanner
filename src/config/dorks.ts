@@ -1,13 +1,17 @@
 export const BASE_DORK_QUERIES = [
-  // 1. Quét mở rộng toàn mạng (Không giới hạn site)
-  '("cần tìm editor" OR "tuyển freelance video" OR "cần người edit video" OR "tìm người edit capcut") (intext:"inbox" OR intext:"zalo" OR intext:"liên hệ")',
-  '("cần designer gấp" OR "tìm thiết kế banner" OR "tuyển người làm thumbnail" OR "cần thuê thiết kế 2d")',
+  // 1. Bình luận & Bài đăng trên TikTok
+  'site:tiktok.com/@* ("cần tìm editor" OR "tuyển edit video" OR "ai nhận edit" OR "tìm người dựng video")',
+  'site:tiktok.com ("tìm designer" OR "ai làm thumbnail" OR "cần người edit capcut")',
 
-  // 2. Dò trong phần Bình luận / Thảo luận (Threads, FB, Diễn đàn)
-  'site:threads.net ("bác nào nhận edit" OR "ai nhận làm video" OR "ai design được" OR "cần người dựng clip")',
-  'site:facebook.com/groups ("cần editor" OR "tìm designer" OR "job edit video") (intext:"comment" OR intext:"ib" OR intext:"zalo")',
+  // 2. Bình luận & Bài đăng trên YouTube (Mỏ vàng Creator tìm Editor)
+  'site:youtube.com ("tìm editor" OR "tuyển edit video" OR "cần người edit video" OR "hiring editor") (intext:"liên hệ" OR intext:"zalo" OR intext:"email")',
+  'site:youtube.com/post ("tuyển editor" OR "cần tìm bạn edit" OR "tìm designer làm thumbnail")',
 
-  // 3. Quét các nền tảng khác (TikTok, LinkedIn, X, Diễn đàn sáng tạo)
-  'site:tiktok.com ("tìm editor" OR "tuyển edit video" OR "cần người edit reels")',
-  'site:linkedin.com/posts ("hiring video editor" OR "tuyển thiết kế freelance" OR "cần editor tiktok")'
+  // 3. Săn lùng câu hỏi / trao đổi tuyển dụng trong Bình luận Threads & Facebook
+  'site:threads.net ("bác nào nhận edit" OR "ai nhận làm video" OR "có ai nhận design" OR "cần thuê người dựng")',
+  'site:threads.net ("inbox giá" OR "báo giá giúp mình" OR "ai rảnh nhận job")',
+  'site:facebook.com/groups ("ai nhận edit" OR "cần người làm video gấp" OR "bác nào design được") (intext:"comment" OR intext:"inbox" OR intext:"zalo")',
+
+  // 4. Quét tự do toàn mạng (Kể cả diễn đàn Voz, Spiderum, blog)
+  '("cần tìm người edit" OR "tìm freelance design") (intext:"bình luận bên dưới" OR intext:"để lại liên hệ" OR intext:"inbox mình")'
 ];
