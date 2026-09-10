@@ -17,19 +17,21 @@ export async function analyzeJobWithGemini(rawContent: string, geminiKey: string
   const url = `https://generativelanguage.googleapis.com/v1beta/models/${MODEL}:generateContent?key=${geminiKey}`;
 
   const prompt = `
-Bạn là chuyên gia thẩm định bài đăng tìm Freelancer (Video Editor, Designer).
-Phân tích nội dung cào từ mạng xã hội/bình luận dưới đây:
+Bạn là chuyên gia thẩm định và săn lùng job Freelance (Video Editor, Designer) từ MẠNG XÃ HỘI VÀ KHU VỰC BÌNH LUẬN (Threads, TikTok, YouTube, Facebook).
+Hãy phân tích dữ liệu cào được dưới đây:
 
-=== NỘI DUNG RAW ===
+=== NỘI DUNG RAW (BAO GỒM CẢ BÌNH LUẬN) ===
 ${rawContent}
-====================
+==========================================
 
-TIÊU CHÍ BẮT BUỘC:
-1. LỌC NGƯỜI THUÊ: "isValidJob = true" CHỈ KHI bài viết/bình luận là từ KHÁCH HÀNG/RECRUITER ĐANG TÌM THUÊ NGƯỜI (kể cả khách để lại bình luận nhờ người làm). Nếu là freelancer tự quảng cáo nhận việc hoặc bài spam -> isValidJob = false.
-2. KHUNG GIỜ 7 NGÀY: "isWithin7Days = true" nếu bài viết được đăng trong vòng 7 ngày trở lại (ví dụ: "5 days ago", "6 ngày trước", "vừa xong", "3 giờ trước" đều LẤY). Nếu bài quá 7 ngày (VD: "2 tuần trước", "1 month ago", bài từ năm ngoái) -> isWithin7Days = false.
-3. PHÂN LOẠI KỸ NĂNG: [CapCut / TikTok / Reels], [Premiere / After Effects], [YouTube Editor], [Photoshop / Banner], [2D / 3D Animation], [Thumbnail Design].
-4. ĐÁNH GIÁ TIỀM NĂNG (1 đến 5 sao kèm lý do): 5/5 ⭐ (Rõ brief, có tiền cụ thể, có contact), 3-4/5 ⭐ (Nhu cầu rõ nhưng bảo inbox/thương lượng), 1-2/5 ⭐ (Mơ hồ/ít tin cậy).
-5. LIÊN HỆ: Trích xuất SĐT/Zalo/Link của chính NGƯỜI CẦN THUÊ.
+HƯỚNG DẪN XỬ LÝ KHU VỰC BÌNH LUẬN (COMMENTS):
+1. NHẬN DIỆN KHÁCH HÀNG:
+   - Nếu trong bình luận có ai đó hỏi thuê (VD: "Ai nhận dựng video kiểu này không?", "Bác nào làm thumbnail giống video này ib mình nhé", "Cần tìm người edit video tương tự LH 09xx..."): ĐÂY LÀ JOB THẬT -> "isValidJob = true".
+   - Nếu bình luận là freelancer tự ứng tuyển ("Em nhận edit giá rẻ...", "Ib em nhận làm...") -> BỎ QUA ("isValidJob = false").
+2. THỜI GIAN (7 NGÀY): Đăng trong vòng 7 ngày trở lại -> "isWithin7Days = true".
+3. THÔNG TIN LIÊN HỆ: Lấy đúng username / SĐT / Zalo của NGƯỜI CẦN THUÊ trong bài viết hoặc trong bình luận đó.
+4. PHÂN LOẠI KỸ NĂNG: [TikTok / Reels], [CapCut], [YouTube Editor], [Premiere / AE], [Thumbnail / Banner], [2D / 3D Design].
+5. CHẤM ĐIỂM (1 - 5 ⭐): Đánh giá độ chi tiết và tiềm năng chốt deal.
 `;
 
   for (let attempt = 1; attempt <= retries; attempt++) {
