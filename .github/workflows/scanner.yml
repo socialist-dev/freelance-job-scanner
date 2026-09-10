@@ -2,9 +2,8 @@ name: 30min Freelance Job Scanner
 
 on:
   schedule:
-    # Chạy mỗi 30 phút một lần
     - cron: '*/30 * * * *'
-  workflow_dispatch: # Cho phép nhấn nút chạy kiểm tra thủ công
+  workflow_dispatch:
 
 jobs:
   scan:
@@ -24,6 +23,7 @@ jobs:
       - name: Run Job Scanner
         env:
           JINA_API_KEY: ${{ secrets.JINA_API_KEY }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           FIRECRAWL_API_KEY: ${{ secrets.FIRECRAWL_API_KEY }}
           SHEET_WEBHOOK_URL: ${{ secrets.SHEET_WEBHOOK_URL }}
         run: npm run scan
