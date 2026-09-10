@@ -11,7 +11,9 @@ export interface AIProcessedJob {
 }
 
 export async function analyzeJobWithGemini(rawContent: string, geminiKey: string): Promise<AIProcessedJob | null> {
-  const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${geminiKey}`;
+  // Đổi sang model Gemini 3.1 Flash Lite mới nhất
+  const MODEL = 'gemini-3.1-flash-lite';
+  const url = `https://generativelanguage.googleapis.com/v1beta/models/${MODEL}:generateContent?key=${geminiKey}`;
 
   const prompt = `
 Bạn là chuyên gia thẩm định và chọn lọc job Freelance (Video Editing, Design, Graphic).
