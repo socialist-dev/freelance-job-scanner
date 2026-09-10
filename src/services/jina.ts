@@ -1,4 +1,4 @@
-import { JobItem, parsePlatform, extractBudget, extractContact } from '../utils/parser.js';
+import { JobItem, parsePlatform, cleanRawContent, extractTimeAgoAndValidate, extractBudget, extractContact } from '../utils/parser';
 
 export async function searchWithJina(query: string, apiKey: string): Promise<JobItem[]> {
   const url = `https://s.jina.ai/${encodeURIComponent(query)}`;
@@ -9,7 +9,7 @@ export async function searchWithJina(query: string, apiKey: string): Promise<Job
       headers: {
         'Authorization': `Bearer ${apiKey}`,
         'X-Locale': 'vi-VN',
-        'X-No-Cache': 'true' // Buộc lấy dữ liệu mới nhất (tránh cache cũ)
+        'X-No-Cache': 'true'
       }
     });
 
@@ -26,22 +26,35 @@ export async function searchWithJina(query: string, apiKey: string): Promise<Job
 
       if (urlMatch) {
         const postUrl = urlMatch[1].trim();
-        const postTitle = titleMatch ? titleMatch[1].trim() : 'Tin tuyển freelance';
-        const cleanContent = section.slice(0, 600).replace(/\n+/g, ' ');
+
+        // Bỏ qua nếu là link profile hoặc trang tìm kiếm
+        if (postUrl.includes('/search') || postUrl.endsWith('.net/') || !postUrl.includes('/post/') && !postUrl.includes('/groups/') && !postUrl.includes('/status/')) {
+          continue;
+        }
+
+        // Lọc bài đăng trong 24h
+        const { isWithin24h, postedAgo } = extractTimeAgoAndValidate(section);
+        if (!isWithin24h) continue;
+
+        const cleanText = cleanRawContent(section);
+
+        // Bỏ qua bài viết quá ngắn hoặc không chứa yêu cầu thực tế
+        if (cleanText.length < 30) continue;
 
         jobs.push({
-          time: new Date().toLocaleString('vi-VN', { timeZone: 'Asia/Ho_Chi_Minh' }),
+          scanTime: new Date().toLocaleString('vi-VN', { timeZone: 'Asia/Ho_Chi_Minh' }),
           platform: parsePlatform(postUrl),
-          title: postTitle,
-          content: cleanContent,
-          budget: extractBudget(cleanContent),
-          contact: extractContact(cleanContent),
+          postedAgo: postedAgo,
+          title: titleMatch ? titleMatch[1].trim() : 'Tìm Freelancer',
+          requirements: cleanText.slice(0, 500) + '...', // Lấy đúng nội dung yêu cầu
+          budget: extractBudget(cleanText),
+          contact: extractContact(cleanText),
           url: postUrl
         });
       }
     }
   } catch (err) {
-    console.error(`Lỗi tìm kiếm Jina với câu query: "${query}"`, err);
+    console.error(`Lỗi Jina search: ${query}`, err);
   }
 
   return jobs;
