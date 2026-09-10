@@ -1,12 +1,13 @@
-export const DORK_QUERIES = [
-  // Threads: Bắt buộc URL phải là bài đăng (/post/) và chứa từ khóa tuyển dụng thực tế
-  'site:threads.net/*/post/* ("cần tìm editor" OR "tìm người edit video" OR "cần editor gấp" OR "tuyển edit capcut")',
-  'site:threads.net/*/post/* ("tìm designer" OR "cần thiết kế banner" OR "cần người làm thumbnail" OR "tuyển freelance design")',
-  'site:threads.net/*/post/* ("nhận edit video" OR "tìm freelancer edit" OR "cần thuê edit" OR "tìm người dựng clip")',
+export const BASE_DORK_QUERIES = [
+  // 1. Quét mở rộng toàn mạng (Không giới hạn site)
+  '("cần tìm editor" OR "tuyển freelance video" OR "cần người edit video" OR "tìm người edit capcut") (intext:"inbox" OR intext:"zalo" OR intext:"liên hệ")',
+  '("cần designer gấp" OR "tìm thiết kế banner" OR "tuyển người làm thumbnail" OR "cần thuê thiết kế 2d")',
 
-  // Facebook: Chỉ quét vào các nhóm tuyển dụng công khai
-  'site:facebook.com/groups/* ("cần tìm editor" OR "tìm người edit video" OR "tìm designer freelance" OR "job edit video")',
-  
-  // X (Twitter): Chỉ quét các tweet tuyển dụng
-  'site:x.com/*/status/* ("cần tìm editor" OR "tuyển editor" OR "cần thiết kế" OR "hiring video editor")'
+  // 2. Dò trong phần Bình luận / Thảo luận (Threads, FB, Diễn đàn)
+  'site:threads.net ("bác nào nhận edit" OR "ai nhận làm video" OR "ai design được" OR "cần người dựng clip")',
+  'site:facebook.com/groups ("cần editor" OR "tìm designer" OR "job edit video") (intext:"comment" OR intext:"ib" OR intext:"zalo")',
+
+  // 3. Quét các nền tảng khác (TikTok, LinkedIn, X, Diễn đàn sáng tạo)
+  'site:tiktok.com ("tìm editor" OR "tuyển edit video" OR "cần người edit reels")',
+  'site:linkedin.com/posts ("hiring video editor" OR "tuyển thiết kế freelance" OR "cần editor tiktok")'
 ];
